@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name" translatable="false">Kursor</string>
+
+    <string name="disclaimer">Kursor is an independent TV browser built for watching video with a remote. It is not affiliated with the websites you open in it; you use those sites with your own accounts and under their terms.
+
+Your sign-ins and viewing data stay on this TV only. They are never sent to the developer or to any other server.</string>
+
+    <string name="hint_welcome">Arrows: cursor   •   OK: click   •   Long OK: home / video mode   •   Menu: text size   •   Hold Menu: ad blocking   •   Back: back</string>
+    <string name="hint_video_mode">Video mode  •  OK: menu  •  ◀ ▶: 10 s  •  ▼: full screen  •  ▲: cursor (full screen: zoom)  •  Long OK: subtitles</string>
+    <string name="hint_cursor_mode">Cursor mode  •  Long OK: video mode</string>
+    <string name="hint_fullscreen">Full screen  •  ▲: fit / fill / zoom  •  ▼ or Back: exit</string>
+    <string name="err_page">The page could not be opened. Check your internet connection and reopen the app.</string>
+    <string name="exit_again">Press Back again to exit</string>
+    <string name="no_video">No video found on this page</string>
+
+    <string name="video_zoom">Picture: %1$s  •  ▲: change</string>
+    <string-array name="zoom_names">
+        <item>Fit to screen</item>
+        <item>Fill screen</item>
+        <item>Zoom 1.2x</item>
+        <item>Zoom 1.4x</item>
+    </string-array>
+    <string name="text_size">Text size: %1$s</string>
+    <string-array name="text_sizes">
+        <item>Large</item>
+        <item>Normal</item>
+        <item>Small</item>
+    </string-array>
+    <string name="video_quality">Video quality: %1$sp</string>
+    <string name="video_resumed">Video continues where it stopped</string>
+    <string name="video_failed">The video cannot be played. Go to the next video or restart the app.</string>
+    <string name="video_error_reload">Video error, reloading the page… (%1$d/3)</string>
+
+    <string name="subs_auto">Subtitles: AUTO (only for videos in another language)</string>
+    <string name="subs_off">Subtitles: OFF</string>
+    <string name="subs_on">Subtitles: ALWAYS ON</string>
+    <string name="sub_preparing">Preparing subtitles…</string>
+    <string name="sub_ready">Subtitles ready</string>
+    <string name="sub_none">This video has no subtitles</string>
+    <string name="sub_failed">Subtitles could not be loaded</string>
+
+    <string name="update_title">Update available</string>
+    <string name="update_message">%1$s is ready to install.</string>
+    <string name="update_now">Update</string>
+    <string name="update_later">Later</string>
+    <string name="update_downloading">Downloading update… %1$d%%</string>
+    <string name="update_installing">Installing update…</string>
+    <string name="update_failed">Update failed: %1$s</string>
+    <string name="menu_prev">⏮ Previous</string>
+    <string name="menu_back">⏪ 10 s</string>
+    <string name="menu_fwd">10 s ⏩</string>
+    <string name="menu_next">Next ⏭</string>
+    <string name="menu_speed">Speed %1$s</string>
+    <string name="menu_subs">Subtitles</string>
+    <string name="menu_zoom">Picture</string>
+    <string name="menu_full">Full screen</string>
+    <string name="menu_full_exit">Exit full screen</string>
+    <string name="menu_subs_mode">SUBTITLES</string>
+    <string name="menu_subs_lang">TRANSLATE TO</string>
+    <string name="subs_mode_auto">Auto (videos in other languages only)</string>
+    <string name="subs_mode_off">Off</string>
+    <string name="subs_mode_on">Always on</string>
+    <string name="speed_set">Speed: %1$s</string>
+    <string name="subs_lang_set">Subtitle language: %1$s</string>
+    <string name="lecture_next">Next…</string>
+    <string name="no_next">No next / previous button on this page</string>
+    <string name="lecture_prev">Previous…</string>
+    <string name="menu_subs_size">TEXT SIZE</string>
+    <string-array name="sub_sizes">
+        <item>Small</item>
+        <item>Medium</item>
+        <item>Large</item>
+        <item>Extra large</item>
+    </string-array>
+    <string name="subs_size_set">Subtitle size: %1$s</string>
+    <string name="address_hint">Search or type an address</string>
+    <string name="home">Home</string>
+    <string name="ad_title">Ad blocking</string>
+    <string name="ad_blocked_n">Ad blocking is on. Blocked on this page: %1$d</string>
+    <string name="ad_site_off">Ad blocking is off on this site.</string>
+    <string name="ad_all_off">Ad blocking is off.</string>
+    <string name="ad_home">Ad blocking is on. Filters update automatically.</string>
+    <string name="ad_site_disable">Turn off on this site</string>
+    <string name="ad_site_enable">Turn on for this site</string>
+    <string name="ad_all_disable">Turn off everywhere</string>
+    <string name="ad_all_enable">Turn on</string>
+</resources>

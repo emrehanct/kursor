@@ -1,0 +1,73 @@
+plugins {
+    id 'com.android.application'
+}
+
+// Sürüm numarası GitHub Actions derleme numarasından gelir; uygulama içi güncelleme bunu karşılaştırır.
+// The version code comes from the GitHub Actions run number; the in-app updater compares it.
+def buildNumber = (System.getenv('GITHUB_RUN_NUMBER') ?: '1').toInteger()
+// İmza anahtarı depoda DEĞİL, GitHub gizli ayarlarında (secrets) durur.
+// The signing key is NOT in the repo; CI writes it from GitHub secrets.
+def releaseKeystore = file('release.keystore')
+
+android {
+    namespace 'app.kursor'
+    compileSdk 36
+
+    defaultConfig {
+        applicationId 'io.github.emrehanct.kursor'
+        minSdk 21
+        targetSdk 36
+        versionCode buildNumber
+        versionName "1.0.${buildNumber}"
+    }
+
+    signingConfigs {
+        release {
+            if (releaseKeystore.exists()) {
+                storeFile releaseKeystore
+                storePassword System.getenv('SIGNING_PASSWORD')
+                keyAlias 'kursor'
+                keyPassword System.getenv('SIGNING_PASSWORD')
+            }
+        }
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            if (releaseKeystore.exists()) signingConfig signingConfigs.release
+        }
+        debug {
+            // Deneme derlemelerinde otomatik güncelleme kapalı / disabled in debug builds
+            resValue 'string', 'update_repo', ''
+        }
+    }
+
+    // İki dağıtım: "github" (GitHub sürümleri + uygulama içi güncelleme) ve
+    // "play" (Google Play; güncellemeleri yalnız Play yapar, uygulama içi güncelleyici yok).
+    // Two distributions: "github" (GitHub releases + in-app updater) and
+    // "play" (Google Play; updates only through Play, no in-app updater).
+    flavorDimensions 'store'
+    productFlavors {
+        github {
+            dimension 'store'
+            // Güncellemeler bu deponun GitHub sürümlerinden kontrol edilir (fork'lar kendi deposunu kullanır).
+            // Updates are checked against this repository's GitHub releases (forks use their own).
+            resValue 'string', 'update_repo', (System.getenv('GITHUB_REPOSITORY') ?: '')
+        }
+        play {
+            dimension 'store'
+            resValue 'string', 'update_repo', ''
+        }
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+
+    lint {
+        abortOnError false
+        checkReleaseBuilds false
+    }
+}

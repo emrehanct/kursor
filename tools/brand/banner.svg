@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 720">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#1B1F4B"/><stop offset="1" stop-color="#4B2A8C"/>
+    </linearGradient>
+    <linearGradient id="acc" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#FFB547"/><stop offset="1" stop-color="#FF6A3D"/>
+    </linearGradient>
+  </defs>
+  <rect width="1280" height="720" fill="url(#bg)"/>
+  <g transform="translate(150,190) scale(0.66)">
+    <path d="M150 104 L150 392 L222 330 L270 430 L322 406 L274 308 L372 300 Z" fill="#fff" stroke="#fff" stroke-width="18" stroke-linejoin="round"/>
+    <path d="M188 196 L188 296 L266 246 Z" fill="url(#acc)" stroke="url(#acc)" stroke-width="10" stroke-linejoin="round"/>
+  </g>
+  <text x="440" y="395" font-family="Inter Display" font-weight="800" font-size="190" fill="#fff" letter-spacing="-4">Kursor</text>
+  <text x="446" y="475" font-family="Inter" font-weight="500" font-size="44" fill="#FFB547">Eğitim videoları için TV tarayıcısı</text>
+</svg>

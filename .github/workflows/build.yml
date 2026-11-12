@@ -1,0 +1,78 @@
+name: Build
+
+# main dalına her gönderimde imzalı APK derlenir ve GitHub Releases'ta yayınlanır;
+# uygulama içindeki otomatik güncelleme bu sürümleri kullanır.
+# Pull request'lerde imzasız deneme (debug) APK'sı derlenir ve "Artifacts" olarak eklenir.
+# Every push to main builds a signed APK and publishes it as a GitHub release (used by the
+# in-app updater). Pull requests get an unsigned debug APK as a build artifact.
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+
+      - uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: '8.13'
+
+      - name: Icons / simgeler
+        run: |
+          pip install --quiet pillow
+          python3 tools/make_icons.py
+
+      - name: Ad filter lists / reklam filtresi listeleri
+        run: sh tools/fetch_filters.sh
+
+      - name: Signing key / imza anahtari
+        id: sign
+        env:
+          KEYSTORE_B64: ${{ secrets.SIGNING_KEYSTORE_B64 }}
+        run: |
+          if [ -n "$KEYSTORE_B64" ]; then
+            echo "$KEYSTORE_B64" | base64 -d > app/release.keystore
+            echo "signed=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "signed=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Build APK / APK derle
+        env:
+          SIGNING_PASSWORD: ${{ secrets.SIGNING_PASSWORD }}
+          TASK: ${{ steps.sign.outputs.signed == 'true' && 'assembleGithubRelease bundlePlayRelease' || 'assembleGithubDebug' }}
+        run: |
+          gradle $TASK --no-daemon --stacktrace
+          mkdir -p out
+          cp app/build/outputs/apk/github/*/*.apk out/Kursor.apk
+          # Google Play paketi (AAB) - TV'ye kurulmaz, yalnız Play Console'a yüklenir
+          # Google Play bundle (AAB) - not installable, only for Play Console upload
+          if ls app/build/outputs/bundle/playRelease/*.aab >/dev/null 2>&1; then
+            cp app/build/outputs/bundle/playRelease/*.aab out/Kursor-GooglePlay.aab
+          fi
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: Kursor.apk
+          path: out/Kursor.apk
+
+      - name: Publish release / surumu yayinla
+        if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main' && steps.sign.outputs.signed == 'true'
+        env:
+          GH_TOKEN: ${{ github.token }}
+          NOTES: ${{ github.event.head_commit.message }}
+          RUN: ${{ github.run_number }}
+        run: |
+          gh release create "v$RUN" out/Kursor.apk out/Kursor-GooglePlay.aab --title "Kursor 1.0.$RUN" --notes "${NOTES:-Automatic build}" --latest

@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="disclaimer">Kursor, videoları kumandayla rahatça izlemek için yapılmış bağımsız bir TV tarayıcısıdır. İçinde açtığınız sitelerle bir bağlantısı yoktur; bu siteleri kendi hesaplarınızla ve onların kurallarına göre kullanırsınız.
+
+Oturum ve izleme bilgileriniz yalnızca bu TV\'de kalır; geliştiriciye veya başka bir sunucuya gönderilmez.</string>
+
+    <string name="hint_welcome">Yön tuşları: imleç   •   OK: tıkla   •   Uzun OK: ana sayfa / video modu   •   Menü: yazı boyutu   •   Menüyü basılı tut: reklam engelleme   •   Geri: geri</string>
+    <string name="hint_video_mode">Video modu  •  OK: menü  •  ◀ ▶: 10 sn  •  ▼: tam ekran  •  ▲: imleç (tam ekranda: yakınlaştır)  •  Uzun OK: altyazı</string>
+    <string name="hint_cursor_mode">İmleç modu  •  Uzun OK: video modu</string>
+    <string name="hint_fullscreen">Tam ekran  •  ▲: sığdır / doldur / yakınlaştır  •  ▼ veya Geri: çık</string>
+    <string name="err_page">Sayfa açılamadı. İnternet bağlantısını kontrol edip uygulamayı yeniden açın.</string>
+    <string name="exit_again">Çıkmak için Geri\'ye tekrar basın</string>
+    <string name="no_video">Bu sayfada video bulunamadı</string>
+
+    <string name="video_zoom">Görüntü: %1$s  •  ▲: değiştir</string>
+    <string-array name="zoom_names">
+        <item>Ekrana sığdır</item>
+        <item>Ekranı doldur</item>
+        <item>Yakınlaştır 1.2x</item>
+        <item>Yakınlaştır 1.4x</item>
+    </string-array>
+    <string name="text_size">Yazı boyutu: %1$s</string>
+    <string-array name="text_sizes">
+        <item>Büyük</item>
+        <item>Normal</item>
+        <item>Küçük</item>
+    </string-array>
+    <string name="video_quality">Görüntü kalitesi: %1$sp</string>
+    <string name="video_resumed">Video kaldığı yerden devam ediyor</string>
+    <string name="video_failed">Video oynatılamıyor. Sonraki videoya geçin veya uygulamayı kapatıp yeniden açın.</string>
+    <string name="video_error_reload">Video hatası alındı, sayfa yeniden yükleniyor… (%1$d/3)</string>
+
+    <string name="subs_auto">Altyazı: OTOMATİK (yalnızca yabancı dilli videolarda)</string>
+    <string name="subs_off">Altyazı: KAPALI</string>
+    <string name="subs_on">Altyazı: HER ZAMAN AÇIK</string>
+    <string name="sub_preparing">Altyazı hazırlanıyor…</string>
+    <string name="sub_ready">Altyazı hazır</string>
+    <string name="sub_none">Bu videoda altyazı yok</string>
+    <string name="sub_failed">Altyazı alınamadı</string>
+
+    <string name="update_title">Güncelleme var</string>
+    <string name="update_message">%1$s kurulmaya hazır.</string>
+    <string name="update_now">Güncelle</string>
+    <string name="update_later">Sonra</string>
+    <string name="update_downloading">Güncelleme indiriliyor… %%%1$d</string>
+    <string name="update_installing">Güncelleme kuruluyor…</string>
+    <string name="update_failed">Güncelleme başarısız: %1$s</string>
+    <string name="menu_prev">⏮ Önceki</string>
+    <string name="menu_back">⏪ 10 sn</string>
+    <string name="menu_fwd">10 sn ⏩</string>
+    <string name="menu_next">Sonraki ⏭</string>
+    <string name="menu_speed">Hız %1$s</string>
+    <string name="menu_subs">Altyazı</string>
+    <string name="menu_zoom">Görüntü</string>
+    <string name="menu_full">Tam ekran</string>
+    <string name="menu_full_exit">Tam ekrandan çık</string>
+    <string name="menu_subs_mode">ALTYAZI</string>
+    <string name="menu_subs_lang">ÇEVİRİ DİLİ</string>
+    <string name="subs_mode_auto">Otomatik (yalnızca yabancı dilli videolar)</string>
+    <string name="subs_mode_off">Kapalı</string>
+    <string name="subs_mode_on">Her zaman açık</string>
+    <string name="speed_set">Hız: %1$s</string>
+    <string name="subs_lang_set">Altyazı dili: %1$s</string>
+    <string name="lecture_next">Sonraki…</string>
+    <string name="no_next">Bu sayfada sonraki / önceki düğmesi yok</string>
+    <string name="lecture_prev">Önceki…</string>
+    <string name="menu_subs_size">YAZI BOYUTU</string>
+    <string-array name="sub_sizes">
+        <item>Küçük</item>
+        <item>Orta</item>
+        <item>Büyük</item>
+        <item>Çok büyük</item>
+    </string-array>
+    <string name="subs_size_set">Altyazı boyutu: %1$s</string>
+    <string name="address_hint">Arayın veya adres yazın</string>
+    <string name="home">Ana sayfa</string>
+    <string name="ad_title">Reklam engelleme</string>
+    <string name="ad_blocked_n">Reklam engelleme açık. Bu sayfada engellenen: %1$d</string>
+    <string name="ad_site_off">Bu sitede reklam engelleme kapalı.</string>
+    <string name="ad_all_off">Reklam engelleme kapalı.</string>
+    <string name="ad_home">Reklam engelleme açık. Filtreler kendiliğinden güncellenir.</string>
+    <string name="ad_site_disable">Bu sitede kapat</string>
+    <string name="ad_site_enable">Bu sitede aç</string>
+    <string name="ad_all_disable">Her yerde kapat</string>
+    <string name="ad_all_enable">Aç</string>
+</resources>
