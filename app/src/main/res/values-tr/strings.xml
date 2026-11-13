@@ -83,4 +83,9 @@ Oturum ve izleme bilgileriniz yalnızca bu TV\'de kalır; geliştiriciye veya ba
     <string name="ad_site_enable">Bu sitede aç</string>
     <string name="ad_all_disable">Her yerde kapat</string>
     <string name="ad_all_enable">Aç</string>
+    <string name="pc_keyboard">Klavye algılandı: PC modu. Tuşlar sayfaya gider • Ctrl+L adres • F5 yenile • Alt+← geri • F1 tüm kısayollar</string>
+    <string name="pc_mouse">Fare algılandı: istediğin yere tıkla, tekerlekle kaydır. Kumandanın yön tuşları ekrandaki imleci geri getirir.</string>
+    <string name="pc_zoom">Yazı boyutu: %%%1$d</string>
+    <string name="pc_help_title">Klavye kısayolları</string>
+    <string name="pc_help">Ctrl+L veya F6 — adres / arama\nF5 veya Ctrl+R — yenile\nAlt+← / Alt+→ — geri / ileri\nAlt+Home — ana sayfa\nCtrl + / Ctrl − / Ctrl 0 — yazı boyutu\nEsc — menüyü kapat / tam ekrandan çık\nMenü tuşu — reklam engelleme\n\nFare: tıkla, tekerlekle kaydır. Kumandanın yön tuşları ekrandaki imleci geri getirir.</string>
 </resources>

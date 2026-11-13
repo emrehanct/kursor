@@ -414,6 +414,32 @@ public class MainActivity extends Activity {
         boolean down = action == KeyEvent.ACTION_DOWN;
         boolean up = action == KeyEvent.ACTION_UP;
 
+        // PC modu: gerçek klavyeden gelen tuşlar sayfaya olduğu gibi gider (oklar, Enter, Tab…), kısayollar hariç.
+        // PC mode: keys from a real keyboard go straight to the page (arrows, Enter, Tab…), except shortcuts.
+        if (!touchUi && isPcKeyboard(e)) {
+            if (down && pcShortcut(e)) return true;
+            if (code == KeyEvent.KEYCODE_ESCAPE && down) {
+                if (menuScroll.getVisibility() == View.VISIBLE) { hidePopup(); return true; }
+                if (menuVisible()) { hideMenu(); return true; }
+                if (isFullscreen()) { exitFullscreen(); return true; }
+            }
+            if (code != KeyEvent.KEYCODE_BACK) return super.dispatchKeyEvent(e);
+        }
+        // Bazı TV kutuları fare tıklamasını OK tuşu olarak gönderir: farenin olduğu yere tıkla.
+        // Some TV boxes send a mouse click as an OK key: click where the mouse is.
+        if (!touchUi && (e.getSource() & InputDevice.SOURCE_MOUSE) == InputDevice.SOURCE_MOUSE
+                && (code == KeyEvent.KEYCODE_DPAD_CENTER || code == KeyEvent.KEYCODE_ENTER)) {
+            if (up) click();
+            return true;
+        }
+        // Kumandaya dönüldü: imleci yeniden göster / back to the remote: show the on-screen cursor again
+        if (!touchUi && mouseMode && down && isDpadOrOk(code)) {
+            mouseMode = false;
+            if (!videoMode) cursor.setVisibility(View.VISIBLE);
+            cursor.moveTo(cx, cy);
+            return true;
+        }
+
         // Medya tuşları her modda videoyu kontrol eder.
         switch (code) {
             case KeyEvent.KEYCODE_MEDIA_PLAY_PAUSE:
@@ -688,9 +714,12 @@ public class MainActivity extends Activity {
     };
 
     private void setVideoMode(boolean on, boolean announce) {
+        // Fare kullanılırken video modu otomatik açılmaz: sitenin kendi oynatıcı düğmeleri kullanılır.
+        // With a mouse, video mode does not take over: the site's own player controls are used.
+        if (on && mouseMode) return;
         videoMode = on;
         if (!on) hideMenu();
-        if (!touchUi) cursor.setVisibility(on ? View.INVISIBLE : View.VISIBLE);
+        if (!touchUi) cursor.setVisibility(on || mouseMode ? View.INVISIBLE : View.VISIBLE);
         if (videoFab != null) { videoFab.setVisibility(on ? View.VISIBLE : View.GONE); videoFab.bringToFront(); }
         if (on) {
             // Video modunda önce en yüksek kaliteyi seç (destekleyen sitelerde), ardından tam ekrana geç.
@@ -1962,9 +1991,11 @@ public class MainActivity extends Activity {
             try { url = "https://www.google.com/search?q=" + URLEncoder.encode(q, "UTF-8"); }
             catch (Exception e) { return; }
         }
-        addressBar.clearFocus();
-        InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-        if (imm != null) imm.hideSoftInputFromWindow(addressBar.getWindowToken(), 0);
+        if (addressBar != null) {
+            addressBar.clearFocus();
+            InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+            if (imm != null) imm.hideSoftInputFromWindow(addressBar.getWindowToken(), 0);
+        }
         web.requestFocus();
         web.loadUrl(url);
     }
@@ -2139,6 +2170,128 @@ public class MainActivity extends Activity {
             handler.postDelayed(this, 3600_000L);
         }
     };
+
+    // ------------------------------------------------------------------ PC mode: mouse + keyboard on TV
+
+    /** Fare kullanılıyor: ekrandaki sahte imleç gizli, tıklamalar farenin olduğu yere gider. */
+    private boolean mouseMode = false;
+    /** Harf tuşu gönderen cihazlar = gerçek klavye (kumandalar harf göndermez). */
+    private final Set<Integer> keyboards = new HashSet<>();
+    private boolean pcHintShown = false;
+
+    private static boolean isDpadOrOk(int code) {
+        return code == KeyEvent.KEYCODE_DPAD_LEFT || code == KeyEvent.KEYCODE_DPAD_RIGHT
+                || code == KeyEvent.KEYCODE_DPAD_UP || code == KeyEvent.KEYCODE_DPAD_DOWN
+                || code == KeyEvent.KEYCODE_DPAD_CENTER;
+    }
+
+    private boolean isPcKeyboard(KeyEvent e) {
+        InputDevice d = e.getDevice();
+        if (d == null || d.isVirtual() || d.getKeyboardType() != InputDevice.KEYBOARD_TYPE_ALPHABETIC) return false;
+        int code = e.getKeyCode();
+        if (!keyboards.contains(d.getId())) {
+            // Bazı kumandalar kendini klavye gibi tanıtır; ilk harf/rakam tuşuna kadar kumanda say.
+            // Some remotes report themselves as keyboards; treat as a remote until a letter key arrives.
+            boolean letter = code >= KeyEvent.KEYCODE_A && code <= KeyEvent.KEYCODE_Z;
+            if (!letter && !e.isCtrlPressed() && !e.isAltPressed() && code != KeyEvent.KEYCODE_TAB
+                    && code != KeyEvent.KEYCODE_SPACE && code != KeyEvent.KEYCODE_ESCAPE
+                    && !(code >= KeyEvent.KEYCODE_F1 && code <= KeyEvent.KEYCODE_F12)) return false;
+            keyboards.add(d.getId());
+            if (!pcHintShown) { pcHintShown = true; showHint(getString(R.string.pc_keyboard), 7000); }
+        }
+        return true;
+    }
+
+    /** Tarayıcı kısayolları / browser shortcuts */
+    private boolean pcShortcut(KeyEvent e) {
+        int code = e.getKeyCode();
+        boolean ctrl = e.isCtrlPressed(), alt = e.isAltPressed();
+        if ((ctrl && code == KeyEvent.KEYCODE_L) || code == KeyEvent.KEYCODE_F6) { showAddressDialog(); return true; }
+        if (code == KeyEvent.KEYCODE_F5 || (ctrl && code == KeyEvent.KEYCODE_R)) { web.reload(); return true; }
+        if (alt && code == KeyEvent.KEYCODE_DPAD_LEFT) { if (web.canGoBack()) web.goBack(); return true; }
+        if ((alt && code == KeyEvent.KEYCODE_DPAD_RIGHT) || code == KeyEvent.KEYCODE_FORWARD) { if (web.canGoForward()) web.goForward(); return true; }
+        if ((alt && code == KeyEvent.KEYCODE_MOVE_HOME) || code == KeyEvent.KEYCODE_HOME) { goHome(); return true; }
+        if (ctrl && (code == KeyEvent.KEYCODE_EQUALS || code == KeyEvent.KEYCODE_PLUS || code == KeyEvent.KEYCODE_NUMPAD_ADD)) { textZoom(10); return true; }
+        if (ctrl && (code == KeyEvent.KEYCODE_MINUS || code == KeyEvent.KEYCODE_NUMPAD_SUBTRACT)) { textZoom(-10); return true; }
+        if (ctrl && (code == KeyEvent.KEYCODE_0 || code == KeyEvent.KEYCODE_NUMPAD_0)) { textZoom(0); return true; }
+        if (code == KeyEvent.KEYCODE_F1 || (ctrl && code == KeyEvent.KEYCODE_SLASH)) { showPcHelp(); return true; }
+        if (code == KeyEvent.KEYCODE_MENU) { showAdDialog(); return true; }
+        return false;
+    }
+
+    private void textZoom(int delta) {
+        WebSettings s = web.getSettings();
+        int z = delta == 0 ? 100 : Math.max(50, Math.min(250, s.getTextZoom() + delta));
+        s.setTextZoom(z);
+        showHint(getString(R.string.pc_zoom, z), 1500);
+    }
+
+    private void showAddressDialog() {
+        final EditText in = new EditText(this);
+        in.setSingleLine(true);
+        in.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_URI);
+        in.setImeOptions(EditorInfo.IME_ACTION_GO);
+        String u = web.getUrl();
+        in.setText(u == null || isAppPage(u) ? "" : u);
+        in.selectAll();
+        final AlertDialog d = new AlertDialog.Builder(this)
+                .setTitle(R.string.address_hint)
+                .setView(in)
+                .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+                    @Override public void onClick(DialogInterface dd, int w) { openAddress(in.getText().toString()); }
+                })
+                .setNegativeButton(android.R.string.cancel, null)
+                .create();
+        in.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override public boolean onEditorAction(TextView v, int id, KeyEvent ev) {
+                d.dismiss();
+                openAddress(v.getText().toString());
+                return true;
+            }
+        });
+        d.show();
+        in.requestFocus();
+    }
+
+    private void showPcHelp() {
+        new AlertDialog.Builder(this)
+                .setTitle(R.string.pc_help_title)
+                .setMessage(R.string.pc_help)
+                .setPositiveButton(android.R.string.ok, null)
+                .show();
+    }
+
+    /** Fare hareketi: sahte imleci gizle, konumu takip et / mouse movement: hide the fake cursor, track position */
+    private void onMouse(MotionEvent e) {
+        if (touchUi) return;
+        cx = e.getX();
+        cy = e.getY();
+        if (!mouseMode) {
+            mouseMode = true;
+            cursor.setVisibility(View.INVISIBLE);
+            if (videoMode) { userLeftVideo = true; setVideoMode(false, false); }
+            if (!pcHintShown) { pcHintShown = true; showHint(getString(R.string.pc_mouse), 7000); }
+        }
+    }
+
+    private static boolean isMouse(MotionEvent e) {
+        return (e.getSource() & InputDevice.SOURCE_MOUSE) == InputDevice.SOURCE_MOUSE
+                || (e.getPointerCount() > 0 && e.getToolType(0) == MotionEvent.TOOL_TYPE_MOUSE);
+    }
+
+    @Override
+    public boolean dispatchGenericMotionEvent(MotionEvent e) {
+        if (isMouse(e)) onMouse(e);
+        return super.dispatchGenericMotionEvent(e);
+    }
+
+    @Override
+    public boolean dispatchTouchEvent(MotionEvent e) {
+        if (isMouse(e)) {
+            onMouse(e);
+        }
+        return super.dispatchTouchEvent(e);
+    }
 
     // ------------------------------------------------------------------ home button
 

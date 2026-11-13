@@ -85,4 +85,9 @@ Your sign-ins and viewing data stay on this TV only. They are never sent to the 
     <string name="ad_site_enable">Turn on for this site</string>
     <string name="ad_all_disable">Turn off everywhere</string>
     <string name="ad_all_enable">Turn on</string>
+    <string name="pc_keyboard">Keyboard detected: PC mode. Keys go to the page • Ctrl+L address • F5 reload • Alt+← back • F1 all shortcuts</string>
+    <string name="pc_mouse">Mouse detected: click anywhere, scroll with the wheel. Arrow keys on the remote bring the on-screen cursor back.</string>
+    <string name="pc_zoom">Text size: %%%1$d</string>
+    <string name="pc_help_title">Keyboard shortcuts</string>
+    <string name="pc_help">Ctrl+L or F6 — address / search\nF5 or Ctrl+R — reload\nAlt+← / Alt+→ — back / forward\nAlt+Home — home page\nCtrl + / Ctrl − / Ctrl 0 — text size\nEsc — close menu / exit full screen\nMenu key — ad blocking\n\nMouse: click, wheel to scroll. The remote\'s arrow keys bring the on-screen cursor back.</string>
 </resources>
